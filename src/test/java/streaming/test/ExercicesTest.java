@@ -420,11 +420,6 @@ public class ExercicesTest {
             long nbEpisodeReq24 = (long) tableauReq24[1];
             
             System.out.println(saisonReq24+"  "+nbEpisodeReq24);
-
-        
+        }
     }
-        
-    }
-    
-        
-    }
+}
