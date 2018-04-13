@@ -26,7 +26,9 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f WHERE f.id=4");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                    + "WHERE f.id=4");
         Film film = (Film) query.getSingleResult();
         
         assertEquals("Fargo", film.getTitre());
@@ -37,7 +39,8 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (f) FROM Film f");
+        Query query = em.createQuery("SELECT COUNT (f) "
+                                    + "FROM Film f");
         long r = (long) query.getSingleResult();
      
         assertEquals(4L, r);
@@ -48,7 +51,8 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT MIN (f.annee) FROM Film f");
+        Query query = em.createQuery("SELECT MIN (f.annee) "
+                                    + "FROM Film f");
         int d = (int) query.getSingleResult();
         
         assertEquals(1968, d);
@@ -59,7 +63,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (l) FROM Lien l JOIN l.film f WHERE f.titre='Big Lebowski (The)'");
+        Query query = em.createQuery("SELECT COUNT (l) "
+                                    + "FROM Lien l "
+                                        + "JOIN l.film f "
+                                    + "WHERE f.titre='Big Lebowski (The)'");
         long nbUrl = (long) query.getSingleResult();
         
         assertEquals(1L, nbUrl);
@@ -70,7 +77,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT(f) FROM Film f JOIN f.realisateurs r WHERE r.nom='Polanski'");
+        Query query = em.createQuery("SELECT COUNT(f) "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Polanski'");
         long filmsReal = (long) query.getSingleResult();
         
         assertEquals(2L, filmsReal);
@@ -81,7 +91,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (f) FROM Film f JOIN f.acteurs a WHERE a.nom='Polanski'");
+        Query query = em.createQuery("SELECT COUNT (f) "
+                                    + "FROM Film f "
+                                        + "JOIN f.acteurs a "
+                                    + "WHERE a.nom='Polanski'");
         long filmsJoue = (long) query.getSingleResult();
         
         assertEquals(1L, filmsJoue);
@@ -92,7 +105,11 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (f) FROM Film f JOIN f.realisateurs r JOIN f.acteurs a WHERE a.nom='Polanski' AND r.nom='Polanski'");
+        Query query = em.createQuery("SELECT COUNT (f) "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                        + "JOIN f.acteurs a "
+                                    + "WHERE a.nom='Polanski' AND r.nom='Polanski'");
         long filmsRealEtJoue = (long) query.getSingleResult();
         
         assertEquals(1L, filmsRealEtJoue);
@@ -103,7 +120,11 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.genre g JOIN f.pays p WHERE g.nom='Horreur' AND p.nom='UK'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.genre g "
+                                        + "JOIN f.pays p "
+                                    + "WHERE g.nom='Horreur' AND p.nom='UK'");
         Film filmReq8 = (Film) query.getSingleResult();
         
         assertEquals("Le bal des vampires", filmReq8.getTitre());
@@ -114,7 +135,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (f) FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Joel'");
+        Query query = em.createQuery("SELECT COUNT (f) "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Joel'");
         long filmsRealReq9 = (long) query.getSingleResult();
         
         assertEquals(2L, filmsRealReq9);
@@ -125,7 +149,14 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Joel' INTERSECT SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Ethan'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Joel' "
+                                    + "INTERSECT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Ethan'");
         List<Film> filmsRealReq10 = (List) query.getResultList();
                 
         assertEquals(2L, filmsRealReq10.size());
@@ -136,7 +167,18 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Joel' INTERSECT SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Ethan' INTERSECT SELECT f FROM Film f JOIN f.acteurs a WHERE a.nom='Buscemi' AND a.prenom='Steve'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Joel' "
+                                    + "INTERSECT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Ethan' "
+                                    + "INTERSECT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.acteurs a "
+                                    + "WHERE a.nom='Buscemi' AND a.prenom='Steve'");
         List<Film> filmsRealReq11 = (List) query.getResultList();
         
         assertEquals(2L, filmsRealReq11.size());
@@ -147,7 +189,22 @@ public class ExercicesTest {
        
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.genre g WHERE g.nom='Policier' INTERSECT SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Joel' INTERSECT SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Coen' AND r.prenom='Ethan' INTERSECT SELECT f FROM Film f JOIN f.acteurs a WHERE a.nom='Buscemi' AND a.prenom='Steve'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.genre g "
+                                    + "WHERE g.nom='Policier' "
+                                    + "INTERSECT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Joel' "
+                                    + "INTERSECT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Coen' AND r.prenom='Ethan' "
+                                    + "INTERSECT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.acteurs a "
+                                    + "WHERE a.nom='Buscemi' AND a.prenom='Steve'");
         List<Film> filmsRealReq12 = (List) query.getResultList();
         
         assertEquals(1, filmsRealReq12.size());
@@ -158,7 +215,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (s) FROM Saison s JOIN s.serie se WHERE se.titre='Dexter'");
+        Query query = em.createQuery("SELECT COUNT (s) "
+                                    + "FROM Saison s "
+                                        + "JOIN s.serie se "
+                                    + "WHERE se.titre='Dexter'");
         long serieReq13 = (Long) query.getSingleResult();
         
         assertEquals(8L, serieReq13);
@@ -169,7 +229,11 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (e) FROM Episode e JOIN e.saison s JOIN s.serie se WHERE se.titre='Dexter'");
+        Query query = em.createQuery("SELECT COUNT (e) "
+                                    + "FROM Episode e "
+                                        + "JOIN e.saison s "
+                                        + "JOIN s.serie se "
+                                    + "WHERE se.titre='Dexter'");
         long serieReq14 = (Long) query.getSingleResult();
         
         assertEquals(96L, serieReq14);        
@@ -180,7 +244,11 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (e) FROM Episode e JOIN e.saison s JOIN s.serie se WHERE se.titre='Dexter' AND s.numSaison=8");
+        Query query = em.createQuery("SELECT COUNT (e) "
+                                    + "FROM Episode e "
+                                        + "JOIN e.saison s "
+                                        + "JOIN s.serie se "
+                                    + "WHERE se.titre='Dexter' AND s.numSaison=8");
         long serieReq15 = (long) query.getSingleResult();
         
         assertEquals(12L, serieReq15);
@@ -191,7 +259,11 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT COUNT (l) FROM Lien l JOIN l.film f JOIN f.genre g WHERE g.nom='Policier'");
+        Query query = em.createQuery("SELECT COUNT (l) "
+                                    + "FROM Lien l "
+                                        + "JOIN l.film f "
+                                        + "JOIN f.genre g "
+                                    + "WHERE g.nom='Policier'");
         long seriesReq16 = (long) query.getSingleResult();
         
         assertEquals(3L, seriesReq16);
@@ -202,7 +274,16 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT l FROM Lien l JOIN l.film f JOIN f.genre g WHERE g.nom='Horreur' INTERSECT SELECT l FROM Lien l JOIN l.film f JOIN f.realisateurs r WHERE r.nom='Polanski'");
+        Query query = em.createQuery("SELECT l "
+                                    + "FROM Lien l "
+                                        + "JOIN l.film f "
+                                        + "JOIN f.genre g "
+                                    + "WHERE g.nom='Horreur' "
+                                    + "INTERSECT SELECT l "
+                                        + "FROM Lien l "
+                                        + "JOIN l.film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Polanski'");
         List<Lien> filmsReq17 = (List) query.getResultList();
         
         assertEquals(1 , filmsReq17.size());
@@ -213,7 +294,14 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
  
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.genre g WHERE g.nom='Horreur' EXCEPT SELECT f FROM Film f JOIN f.realisateurs r WHERE r.nom='Polanski'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.genre g "
+                                    + "WHERE g.nom='Horreur' "
+                                    + "EXCEPT SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.realisateurs r "
+                                    + "WHERE r.nom='Polanski'");
         List<Film> filmsReq18 = (List) query.getResultList();
         
         assertEquals(0, filmsReq18.size());
@@ -224,7 +312,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.acteurs a WHERE a.nom='Polanski'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.acteurs a "
+                                    + "WHERE a.nom='Polanski'");
         List<Film> filmsReq19 = (List) query.getResultList();
         
         assertEquals(1 , filmsReq19.size());
@@ -235,7 +326,14 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT f FROM Film f JOIN f.acteurs a WHERE a.nom='Polanski' UNION SELECT f FROM Film f JOIN f.genre g WHERE g.nom='Horreur'");
+        Query query = em.createQuery("SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.acteurs a"
+                                    + "WHERE a.nom='Polanski' "
+                                    + "UNION SELECT f "
+                                    + "FROM Film f "
+                                        + "JOIN f.genre g "
+                                    + "WHERE g.nom='Horreur'");
         List<Film> filmsReq20 = (List) query.getResultList();
         
         assertEquals(1 , filmsReq20.size());
@@ -246,7 +344,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT g.nom, COUNT (f) FROM Genre g LEFT JOIN g.films f GROUP BY g");
+        Query query = em.createQuery("SELECT g.nom, COUNT (f) "
+                                    + "FROM Genre g "
+                                        + "LEFT JOIN g.films f "
+                                    + "GROUP BY g");
         List<Object[]> req21 = query.getResultList();
         
         for (Object[] tableauReq21 : req21) {
@@ -264,7 +365,11 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT p.nom, COUNT (p) FROM Personne p JOIN p.filmsRealises fr GROUP BY p ORDER BY p.nom ASC");
+        Query query = em.createQuery("SELECT p.nom, COUNT (p) "
+                                    + "FROM Personne p "
+                                        + "JOIN p.filmsRealises fr "
+                                    + "GROUP BY p "
+                                    + "ORDER BY p.nom ASC");
         List<Object[]> req22 = query.getResultList();
         
         for (Object[] tableauReq22 : req22) {
@@ -281,7 +386,12 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT p.nom, COUNT (p) FROM Personne p JOIN p.filmsRealises fr GROUP BY p HAVING COUNT (p) >= 2 ORDER BY p.nom ASC");
+        Query query = em.createQuery("SELECT p.nom, COUNT (p) "
+                                    + "FROM Personne p "
+                                        + "JOIN p.filmsRealises fr "
+                                    + "GROUP BY p "
+                                    + "HAVING COUNT (p) >= 2 "
+                                    + "ORDER BY p.nom ASC");
         List<Object[]> req23 = query.getResultList();
         
         for (Object[] tableauReq23 : req23) {
@@ -298,7 +408,10 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT e.saison, COUNT (e) FROM Episode e JOIN e.saison s GROUP BY s");
+        Query query = em.createQuery("SELECT e.saison, COUNT (e) "
+                                    + "FROM Episode e "
+                                        + "JOIN e.saison s "
+                                    + "GROUP BY s");
         List<Object[]> req24 = query.getResultList();
         
         for (Object[] tableauReq24 : req24) {
