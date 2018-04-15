@@ -8,12 +8,15 @@ package streaming.test;
 import java.util.List;
 import static org.junit.Assert.*;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import org.junit.Test;
 import streaming.entity.Film;
 import streaming.entity.Genre;
 import streaming.entity.Lien;
+import streaming.entity.Personne;
+import streaming.entity.Serie;
 
 /**
  *
@@ -328,7 +331,7 @@ public class ExercicesTest {
         
         Query query = em.createQuery("SELECT f "
                                     + "FROM Film f "
-                                        + "JOIN f.acteurs a"
+                                        + "JOIN f.acteurs a "
                                     + "WHERE a.nom='Polanski' "
                                     + "UNION SELECT f "
                                     + "FROM Film f "
@@ -386,12 +389,12 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT p.nom, COUNT (p) "
+        Query query = em.createQuery("SELECT p.nom, COUNT (p) AS total "
                                     + "FROM Personne p "
                                         + "JOIN p.filmsRealises fr "
                                     + "GROUP BY p "
                                     + "HAVING COUNT (p) >= 2 "
-                                    + "ORDER BY p.nom ASC");
+                                    + "ORDER BY total, p.nom ASC");
         List<Object[]> req23 = query.getResultList();
         
         for (Object[] tableauReq23 : req23) {
@@ -408,18 +411,66 @@ public class ExercicesTest {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
-        Query query = em.createQuery("SELECT e.saison, COUNT (e) "
-                                    + "FROM Episode e "
-                                        + "JOIN e.saison s "
-                                    + "GROUP BY s");
+        Query query = em.createQuery("SELECT s.titre, COUNT (sa) AS total "
+                                    + "FROM Serie s "
+                                        + "JOIN s.saisons sa "
+                                    + "GROUP BY s "
+                                    + "ORDER BY total, s.titre ASC");
         List<Object[]> req24 = query.getResultList();
         
         for (Object[] tableauReq24 : req24) {
-        
-            long saisonReq24 = (long) tableauReq24[0];
+
+            String nomReq24 = (String) tableauReq24[0];
             long nbEpisodeReq24 = (long) tableauReq24[1];
             
-            System.out.println(saisonReq24+"  "+nbEpisodeReq24);
+            System.out.println(nomReq24+" # "+nbEpisodeReq24+" épisodes");
         }
+    }
+    
+    @Test
+    public void req25() {
+        
+       EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU");
+       EntityManager em = factory.createEntityManager();
+
+       Query query = em.createQuery("SELECT COUNT(e) AS total, s.titre "
+                                    + "FROM     Serie s "
+                                        + "JOIN s.saisons sa "
+                                        + "JOIN sa.episodes e "
+                                    + "GROUP BY s "
+                                    + "HAVING total>5 "
+                                    + "ORDER BY total");
+
+        List<Object[]> req25 = query.getResultList();
+        for (Object[] tableauReq25 : req25) {
+
+            System.out.println(String.format("%s %d", tableauReq25[1], tableauReq25[0])); // autre façon de présenter les résultats 
+        
+        }
+    }
+    
+    @Test
+    public void reqCRUD()    {
+        
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU");
+        EntityManager em = factory.createEntityManager();
+        
+        em.getTransaction().begin();// Démarre transaction: nécessaire si écritures
+        
+        em.createQuery("UPDATE FROM Personne p SET p.nom = 'coucou'").executeUpdate();
+        em.persist( new Personne() );// INSERT
+        
+        Serie s = em.find(Serie.class, 1L);// Récup 1 entité
+        em.remove(s);// Pas génial puisque nécessite un find auparavant!
+        
+        Serie dexter = new Serie();
+        dexter.setTitre("DEXTER NOUV VERSION");
+        dexter.setSynopsis("coucou");
+        dexter.setId(1L);
+        em.merge(dexter);
+        
+        em.createQuery("DELETE FROM Serie s WHERE s.id=1").executeUpdate();
+        
+        em.getTransaction().commit();// Valide en DB modifs
     }
 }

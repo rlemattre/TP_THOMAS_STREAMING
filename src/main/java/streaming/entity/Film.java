@@ -78,6 +78,15 @@ public class Film implements Serializable {
         return annee;
     }
 
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+    
+
     public void setAnnee(Integer annee) {
         this.annee = annee;
     }
