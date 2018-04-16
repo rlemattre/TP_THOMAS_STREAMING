@@ -20,7 +20,7 @@ import streaming.entity.Pays;
 public class AccesBase {
     
     @Test
-    public void ajouter() {
+    public void ajouterUnFilm() {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
      
