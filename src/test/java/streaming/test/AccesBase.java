@@ -117,7 +117,7 @@ public class AccesBase {
     }
     
     //@Test
-    public void effacerMethode2()   {
+    public void effacerMethode2()   { // méthode à priviligier pour les effacements
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
         
