@@ -13,7 +13,6 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import org.junit.Test;
 import streaming.entity.Film;
-import streaming.entity.Genre;
 import streaming.entity.Lien;
 import streaming.entity.Personne;
 import streaming.entity.Serie;
