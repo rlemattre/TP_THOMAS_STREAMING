@@ -447,29 +447,4 @@ public class ExercicesTest {
         
         }
     }
-    
-    @Test
-    public void reqCRUD()    {
-        
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = factory.createEntityManager();
-        
-        em.getTransaction().begin();// Démarre transaction: nécessaire si écritures
-        
-        em.createQuery("UPDATE FROM Personne p SET p.nom = 'coucou'").executeUpdate();
-        em.persist( new Personne() );// INSERT
-        
-        Serie s = em.find(Serie.class, 1L);// Récup 1 entité
-        em.remove(s);// Pas génial puisque nécessite un find auparavant!
-        
-        Serie dexter = new Serie();
-        dexter.setTitre("DEXTER NOUV VERSION");
-        dexter.setSynopsis("coucou");
-        dexter.setId(1L);
-        em.merge(dexter);
-        
-        em.createQuery("DELETE FROM Serie s WHERE s.id=1").executeUpdate();
-        
-        em.getTransaction().commit();// Valide en DB modifs
-    }
 }
