@@ -19,18 +19,19 @@ import streaming.entity.Pays;
  */
 public class AccesBase {
     
-    @Test
+    //@Test
     public void ajouterUnFilm() {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
      
         em.getTransaction().begin(); // début de la transaction
         
-        //Genre g = em.find(Genre.class, 3L); //récupération du genre Fantastique
-        Query query = em.createQuery("SELECT g FROM Genre g WHERE g.nom='Fantastique'"); // même récupération que précédemmnent mais avec une requête
-        Genre g = (Genre) query.getSingleResult();
+        Genre g = em.find(Genre.class, 3L); //récupération du genre Fantastique
+        //Query query = em.createQuery("SELECT g FROM Genre g WHERE g.nom='Fantastique'"); // même récupération que précédemmnent mais avec une requête
+        //Genre g = (Genre) query.getSingleResult();
         
-        Pays p = em.find(Pays.class, 3L);
+        Pays france = em.find(Pays.class, 2L);
+        Pays usa = em.find(Pays.class, 3L);
         
         Film f = new Film(); // Création d'un nouvel objet
         
@@ -41,8 +42,11 @@ public class AccesBase {
         f.setSynopsis("Deux savants découvrent l'existence, outre l'eau, l'air, la terre et le feu, d'un cinquième élément.");
         
         //configuration avec un manytomany
-        f.getPays().add(p);
-        p.getFilmsProduits().add(f);
+        f.getPays().add(france);
+        france.getFilmsProduits().add(f);
+        
+        f.getPays().add(usa);
+        usa.getFilmsProduits().add(f);
         
         //configuration avec un manytoone
         f.setGenre(g); //configuration du genre dans notre objet
@@ -51,7 +55,7 @@ public class AccesBase {
         em.getTransaction().commit(); // on pousse les modifications et on les valide
     }
     
-    @Test
+    //@Test
     public void ajouterGenre()  {
         
         EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
@@ -67,4 +71,62 @@ public class AccesBase {
         em.getTransaction().commit();
     }
     
+    //@Test
+    public void modificationFilmParSet()   {
+        
+        EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
+        
+        em.getTransaction().begin();
+        
+        Film f = em.find(Film.class, 14L);
+        
+        f.setTitre("*** bla bla bla ***");
+        
+        em.getTransaction().commit();
+    }
+    
+    //@Test
+    public void modificationFilmParMerge()  {
+        
+        EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
+        
+        em.getTransaction().begin();
+        
+        Film f = new Film();
+        
+        f.setId(16L);
+        f.setTitre("*** NO NO NO ****");
+        
+        em.merge(f);
+        
+        em.getTransaction().commit();
+    }
+    
+    //@Test
+    public void effacerMethode1()   {
+        
+        EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
+        
+        em.getTransaction().begin();
+        
+        Genre g = em.find(Genre.class, 8L);
+        
+        em.remove(g);
+        
+        em.getTransaction().commit();
+    }
+    
+    //@Test
+    public void effacerMethode2()   {
+        
+        EntityManager em = Persistence.createEntityManagerFactory("PU").createEntityManager();
+        
+        em.getTransaction().begin();
+        
+        Query query = em.createQuery("DELETE FROM Genre g WHERE g.id=9");
+        
+        query.executeUpdate();
+               
+        em.getTransaction().commit();
+    }
 }
