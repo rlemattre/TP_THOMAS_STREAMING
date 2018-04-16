@@ -39,12 +39,16 @@ public class AccesBase {
         f.setTitre("5eme Element");
         f.setAnnee(1997);
         f.setSynopsis("Deux savants découvrent l'existence, outre l'eau, l'air, la terre et le feu, d'un cinquième élément.");
+        
+        //configuration avec un manytomany
         f.getPays().add(p);
         p.getFilmsProduits().add(f);
+        
+        //configuration avec un manytoone
         f.setGenre(g); //configuration du genre dans notre objet
         g.getFilms().add(f); // obligation dans les cas de relations bidirectionnnelles
        
-        em.getTransaction().commit();
+        em.getTransaction().commit(); // on pousse les modifications et on les valide
     }
     
     @Test
